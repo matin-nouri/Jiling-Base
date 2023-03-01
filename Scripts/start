@@ -1,0 +1,45 @@
+#!/bin/sh
+
+HOST=$1
+BASEDIR=$2
+NUM=$3
+port=6000
+Port=6002
+
+if [ -z "$LD_LIBRARY_PATH" ]
+then
+        LD_LIBRARY_PATH=.
+else
+        LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
+fi
+
+export LD_LIBRARY_PATH
+
+teamname="Robo2D_Base"
+
+player="./Robo2D_Player"
+coach="./Robo2D_Coach"
+
+config="./data/player.conf"
+coach_config="./data/coach.conf"
+config_dir="./data/formations-dt"
+
+opt="--player-config ${config} --config_dir ${config_dir}"
+opt="${opt} -h ${HOST} -t ${teamname} -p ${port}"
+
+coachopt="--coach-config ${coach_config}"
+coachopt="${coachopt} -h ${HOST} -t ${teamname} -P ${Port}"
+
+cd $BASEDIR
+
+case $NUM in
+    1)
+        $player $opt -g
+        ;;
+    12)
+        $coach $coachopt
+        ;;
+    *)
+        $player $opt
+        ;;
+esac
